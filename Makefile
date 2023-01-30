@@ -1,11 +1,12 @@
-ARCH=armv7-a
-MCPU=cortex-a8
+ARCH = armv7-a
+MCPU = cortex-a8
 
-CROSS=arm-none-eabi-
-CC=$(CROSS)gcc 
+COMPILER = arm-none-eabi-
+CC = $(COMPILER)gcc
+AS = $(COMPILER)as
+LD = $(COMPILER)ld
+OC = $(COMPILER)objcopy
 
-ech: all
-	echo $(CC)
+LINKER_SCRIPT = ./navilos.ld
 
-all : 
-	touch d
+ASM_SRCS = $(wildcard boot/*.S)
