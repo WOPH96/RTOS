@@ -49,9 +49,9 @@ $(navilos): $(ASM_OBJS) $(LINKER_SCRIPT)
 	$(OC) -O binary $(navilos) $(navilos_bin)
 
 # ASM SRCS가 존재해야 함
-$(ASM_OBJS): $(ASM_SRCS)
 # $@ : 현재 타겟의 이름
 # $< : 의존 파일 목록의 첫 번째 파일
 # $^ : 의존 파일 목럭 전체
+$(ASM_OBJS) : $(ASM_SRCS)
 	mkdir -p $(shell dirname $@)
 	$(AS) -march=$(ARCH) -mcpu=$(MCPU) -g -o $@ $<
