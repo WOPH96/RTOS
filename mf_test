@@ -1,0 +1,6 @@
+ASM_SRCS = $(wildcard boot/*.S)
+# patsubst pattern,replacement,text - text 중에서 패턴과 일치하는 것을 대치한다 
+ASM_OBJS = $(patsubst boot/%.S, build/%.o, $(ASM_SRCS)) # 위에 사용된 *과 같은 의미
+
+all :
+	echo $(ASM_OBJS)
