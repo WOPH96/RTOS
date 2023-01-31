@@ -43,13 +43,15 @@ gdb :
 	$(GDB)
 
 # $(navilos)를 빌드한 뒤 동작함
-# ASM_OBJS = 
+# ASM_OBJS = ASM_SRCS --> from boot/%.S to build/%.o 
 $(navilos): $(ASM_OBJS) $(LINKER_SCRIPT)
 	$(LD) -n -T $(LINKER_SCRIPT) -o $(navilos) $(ASM_OBJS)
 	$(OC) -O binary $(navilos) $(navilos_bin)
 
-# 
+# ASM SRCS가 존재해야 함
 $(ASM_OBJS): $(ASM_SRCS)
-	echo $(shell dirname $@)
+# $@ : 현재 타겟의 이름
+# $< : 의존 파일 목록의 첫 번째 파일
+# $^ : 의존 파일 목럭 전체
 	mkdir -p $(shell dirname $@)
 	$(AS) -march=$(ARCH) -mcpu=$(MCPU) -g -o $@ $<
