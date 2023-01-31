@@ -25,9 +25,12 @@ navilos_bin = build/navilos.bin
 
 # left - Target (빌드 하려는 대상) : right - Dependencies (나열된 Dependencies를 먼저 만들고 빌드 Target을 생성함)
 #	Recipe (빌드 내용)
+# make 'Target' 식으로 호출
+# make만 호출 시, 맨 위의 Target이 호출됨 
 
 all : $(navilos)
 
+# @을 붙이면 출력을 감춤
 clean:
 	@rm -fr build
 
