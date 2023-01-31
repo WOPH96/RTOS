@@ -26,17 +26,17 @@ navilos_bin = build/navilos.bin
 # left - Target (빌드 하려는 대상) : right - Dependencies (나열된 Dependencies를 먼저 만들고 빌드 Target을 생성함)
 #	Recipe (빌드 내용)
 
-all: $(navilos)
+all : $(navilos)
 
 clean:
 	@rm -fr build
 
 # $(navilos)를 빌드한 뒤 동작함
-run: $(navilos)
+run : $(navilos)
 	qemu-system-arm -M $(MACHINE) -kernel $(navilos)
 
 # $(navilos)를 빌드한 뒤 동작함
-debug: $(navilos)
+debug : $(navilos)
 	qemu-system-arm -M $(MACHINE) -kernel $(navilos) -S -gdb tcp::1234,ipv4
 
 gdb :
@@ -44,7 +44,7 @@ gdb :
 
 # $(navilos)를 빌드한 뒤 동작함
 # ASM_OBJS = ASM_SRCS --> from boot/%.S to build/%.o 
-$(navilos): $(ASM_OBJS) $(LINKER_SCRIPT)
+$(navilos) : $(ASM_OBJS) $(LINKER_SCRIPT)
 	$(LD) -n -T $(LINKER_SCRIPT) -o $(navilos) $(ASM_OBJS)
 	$(OC) -O binary $(navilos) $(navilos_bin)
 
