@@ -12,6 +12,8 @@ GDB = $(COMPILER)gdb
 
 LINKER_SCRIPT = ./navilos.ld
 
+INC_DIRS = include
+
 # wildcard parttern - 패턴과 일치하는 것을 불러오는 데 사용한다 
 ASM_SRCS = $(wildcard boot/*.S)
 # patsubst pattern,replacement,text - text 중에서 패턴과 일치하는 것을 대치한다 
@@ -65,4 +67,4 @@ $(navilos) : $(ASM_OBJS) $(LINKER_SCRIPT)
 # $^ : 의존 파일 목럭 전체
 $(ASM_OBJS) : $(ASM_SRCS)
 	mkdir -p $(shell dirname $@)
-	$(AS) -march=$(ARCH) -mcpu=$(MCPU) -g -o $@ $<
+	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -g -o $@ $<
