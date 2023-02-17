@@ -7,9 +7,12 @@ CC = $(COMPILER)gcc
 AS = $(COMPILER)as
 LD = $(COMPILER)ld
 OC = $(COMPILER)objcopy
+OD = $(COMPILER)objdump
 GDB = $(COMPILER)gdb
 
 LINKER_SCRIPT = ./navilos.ld
+
+INC_DIRS = include
 
 # wildcard parttern - 패턴과 일치하는 것을 불러오는 데 사용한다 
 ASM_SRCS = $(wildcard boot/*.S)
@@ -21,7 +24,7 @@ navilos_bin = build/navilos.bin
 
 # 충돌 방지용 mention 
 # e.g. : clean이라는 파일이 있어도 make clean 시 문제 없게
-.PHONY = all clean run debug gdb 
+.PHONY = all clean run debug gdb dump hex
 
 # left - Target (빌드 하려는 대상) : right - Dependencies (나열된 Dependencies를 먼저 만들고 빌드 Target을 생성함)
 #	Recipe (빌드 내용)
@@ -45,6 +48,13 @@ debug : $(navilos)
 gdb :
 	$(GDB)
 
+dump : $(navilos)
+	$(OD) -D $(navilos)
+
+hex : $(navilos_bin)
+	@hexdump $(navilos_bin)
+	
+
 # $(navilos)를 빌드한 뒤 동작함
 # ASM_OBJS = ASM_SRCS --> from boot/%.S to build/%.o 
 $(navilos) : $(ASM_OBJS) $(LINKER_SCRIPT)
@@ -57,4 +67,4 @@ $(navilos) : $(ASM_OBJS) $(LINKER_SCRIPT)
 # $^ : 의존 파일 목럭 전체
 $(ASM_OBJS) : $(ASM_SRCS)
 	mkdir -p $(shell dirname $@)
-	$(AS) -march=$(ARCH) -mcpu=$(MCPU) -g -o $@ $<
+	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -g -o $@ $<
