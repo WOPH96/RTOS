@@ -67,4 +67,4 @@ $(navilos) : $(ASM_OBJS) $(LINKER_SCRIPT)
 # $^ : 의존 파일 목럭 전체
 $(ASM_OBJS) : $(ASM_SRCS)
 	mkdir -p $(shell dirname $@)
-	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -g -o $@ $<
+	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -c -g -o $@ $< 
