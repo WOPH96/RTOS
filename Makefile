@@ -11,6 +11,7 @@ OD = $(COMPILER)objdump
 GDB = $(COMPILER)gdb
 
 LINKER_SCRIPT = ./navilos.ld
+MAP_FILE = build/navilos.map
 
 INC_DIRS = include
 
@@ -18,6 +19,10 @@ INC_DIRS = include
 ASM_SRCS = $(wildcard boot/*.S)
 # patsubst pattern,replacement,text - text 중에서 패턴과 일치하는 것을 대치한다 
 ASM_OBJS = $(patsubst boot/%.S, build/%.o, $(ASM_SRCS)) # 위에 사용된 *과 같은 의미
+
+C_SRCS = $(wildcard boot/*.c)
+C_OBJS = $(patsubst boot/%.c, build/%.o, $(C_SRCS))
+
 
 navilos = build/navilos.axf
 navilos_bin = build/navilos.bin
@@ -55,10 +60,12 @@ hex : $(navilos_bin)
 	@hexdump $(navilos_bin)
 	
 
-# $(navilos)를 빌드한 뒤 동작함
+# $(navilos)= navilos.axf 를 빌드
+# 의존성이 전부 충족되어야 빌드가능
+# C_OBJS = C_SRCS 으로부터 생성 
 # ASM_OBJS = ASM_SRCS --> from boot/%.S to build/%.o 
-$(navilos) : $(ASM_OBJS) $(LINKER_SCRIPT)
-	$(LD) -n -T $(LINKER_SCRIPT) -o $(navilos) $(ASM_OBJS)
+$(navilos) : $(ASM_OBJS) $(C_OBJS) $(LINKER_SCRIPT)
+	$(LD) -n -T $(LINKER_SCRIPT) -o $(navilos) $(ASM_OBJS) $(C_OBJS) -Map=$(MAP_FILE)
 	$(OC) -O binary $(navilos) $(navilos_bin)
 
 # ASM SRCS가 존재해야 함
@@ -68,3 +75,7 @@ $(navilos) : $(ASM_OBJS) $(LINKER_SCRIPT)
 $(ASM_OBJS) : $(ASM_SRCS)
 	mkdir -p $(shell dirname $@)
 	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -c -g -o $@ $< 
+
+$(C_OBJS) : $(C_SRCS)
+	mkdir -p $(shell dirname $@)
+	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -c -g -o $@ $<

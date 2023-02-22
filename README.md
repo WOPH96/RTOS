@@ -2,3 +2,4 @@
 
 ## 추가
 
+https://0xsaika.tistory.com/5 --> arm assembly 
