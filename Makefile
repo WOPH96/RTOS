@@ -2,6 +2,8 @@ ARCH = armv7-a
 MCPU = cortex-a8
 MACHINE = realview-pb-a8
 
+TARGET = rvpb
+
 COMPILER = arm-none-eabi-
 CC = $(COMPILER)gcc
 AS = $(COMPILER)as
@@ -13,16 +15,21 @@ GDB = $(COMPILER)gdb
 LINKER_SCRIPT = ./navilos.ld
 MAP_FILE = build/navilos.map
 
-INC_DIRS = include
-
 # wildcard parttern - 패턴과 일치하는 것을 불러오는 데 사용한다 
-ASM_SRCS = $(wildcard boot/*.S)
 # patsubst pattern,replacement,text - text 중에서 패턴과 일치하는 것을 대치한다 
-ASM_OBJS = $(patsubst boot/%.S, build/%.o, $(ASM_SRCS)) # 위에 사용된 *과 같은 의미
+ASM_SRCS = $(wildcard boot/*.S)
+ASM_OBJS = $(patsubst boot/%.S, build/%.os, $(ASM_SRCS)) # 위에 사용된 *과 같은 의미
 
-C_SRCS = $(wildcard boot/*.c)
+C_SRCS = $(notdir $(wildcard boot/*.c))
+C_SRCS += $(notdir $(wildcard hal/$(TARGET)/*.c))
 C_OBJS = $(patsubst boot/%.c, build/%.o, $(C_SRCS))
 
+VPATH = boot \
+		 hal/$(TARGET)
+
+INC_DIRS = include
+
+CFLAGS = -c -g -std=c11
 
 navilos = build/navilos.axf
 navilos_bin = build/navilos.bin
